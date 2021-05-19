@@ -13,5 +13,6 @@ router.use((req, res, next)=> {
   router.get('/signup', userCtrl.signup_get)
   router.post('/signup', userCtrl.signup_post)
   router.post('/login', userCtrl.login_post)
-  
+  router.get('/logout', userCtrl.logout)
+
 module.exports = router
