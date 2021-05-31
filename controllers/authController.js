@@ -42,3 +42,15 @@ module.exports.checkUser = (req, res, next) => {
       next();
     }
   };
+module.exports.checkUser2 = async (req, res) => {
+  const token = req.body.jwt
+
+  try {
+    const decodedToken = await jwt.verify(token, process.env.SECRET_PRIVATE_KEY)
+    let user = await User.findById(decodedToken.id)
+    res.status(200).json(user.username)
+  }
+  catch(err) {
+    res.status(400).send(err)
+  }
+}

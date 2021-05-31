@@ -20,8 +20,10 @@ module.exports.signup_post = async (req, res) => {
     try {
       const user = await new User({ username, password })
       const token = createToken(user._id);
-      res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-      res.status(201).json({ user: user._id });
+      res.cookie('jwt', token, { httpOnly: false, maxAge: maxAge * 1000 });
+      res.json({token, httpOnly: false, maxAge: maxAge * 1000 })
+      res.status(201).json({ user: user._id, token: 'test token' });
+      res.status(201).json({ token: 'test token' });
 
       user.save((e) => {
         if (e) {
@@ -34,20 +36,35 @@ module.exports.signup_post = async (req, res) => {
     }
 }
 
-module.exports.login_post = async (req,res) => {
+/*module.exports.login_post = async (req,res) => {
   const { username , password } = req.body
   
   try {
     const user = await User.login(username, password)
     const token = createToken(user._id)
     res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
-    res.status(200).json({ user: user._id })
+    res.status(200).json({ user: user._id, token: token  })
+  }
+  catch (err){
+    console.log(err)
+    res.status(400).send(err.message)
+  }
+}*/
+
+module.exports.login_post = async (req,res) => {
+  const { username , password } = req.body
+  
+  try {
+    const user = await User.login(username, password)
+    const token = createToken(user._id)
+    res.status(200).json({ user: user.username, token: token  })
   }
   catch (err){
     console.log(err)
     res.status(400).send(err.message)
   }
 }
+
 
 module.exports.logout = (req, res) => {
   res.cookie('jwt', '', {maxAge: 1} )

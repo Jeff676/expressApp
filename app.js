@@ -6,11 +6,13 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const authcontroller = require('./controllers/authController')
+const cors = require('cors')
 
 app.use(morgan('dev'))
 app.use(express.json());
 dotenv.config()
 app.use(cookieParser())
+app.use(cors())
 
 app.get('*', authcontroller.checkUser)
 app.get('/', (req,res, next) => {
